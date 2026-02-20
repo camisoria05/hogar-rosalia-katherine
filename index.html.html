@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hogar · Rosalía & Katherine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:      #D63F6E;
+  --rose-mid:  #E8719A;
+  --rose-lt:   #F5C0D4;
+  --blush:     #FDF0F5;
+  --cream:     #FEFAFC;
+  --plum:      #3D1027;
+  --plum-lt:   #6B3050;
+  --gold:      #C9935A;
+  --gold-lt:   #F0D5B8;
+  --mint:      #6BAB8E;
+  --white:     #FFFFFF;
+  --shadow-sm: 0 2px 12px rgba(214,63,110,.10);
+  --shadow-md: 0 6px 28px rgba(214,63,110,.13);
+  --shadow-lg: 0 16px 48px rgba(214,63,110,.16);
+  --r: 14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Jost',sans-serif;
+  background:var(--cream);
+  color:var(--plum);
+  min-height:100vh;
+}
+
+/* ─── NOISE TEXTURE OVERLAY ─── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+/* ─── HEADER ─── */
+header{
+  position:relative;z-index:10;
+  background:linear-gradient(135deg, var(--plum) 0%, #6B1035 55%, #B83064 100%);
+  padding:2.2rem 3rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  overflow:hidden;
+}
+header::after{
+  content:'';
+  position:absolute;right:-60px;top:-60px;
+  width:300px;height:300px;
+  background:radial-gradient(circle, rgba(232,113,154,.25) 0%, transparent 70%);
+  pointer-events:none;
+}
+.header-left h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  color:var(--white);
+  font-weight:700;
+  letter-spacing:-.01em;
+  line-height:1.1;
+}
+.header-left h1 span{color:var(--rose-lt);}
+.header-left p{
+  color:rgba(255,255,255,.5);
+  font-size:.82rem;font-weight:300;
+  margin-top:.35rem;
+}
+.header-right{
+  display:flex;gap:.6rem;flex-wrap:wrap;justify-content:flex-end;z-index:1;
+}
+.btn-add-month{
+  display:flex;align-items:center;gap:.4rem;
+  background:rgba(255,255,255,.12);
+  border:1.5px solid rgba(255,255,255,.25);
+  color:var(--white);
+  padding:.5rem 1.1rem;
+  border-radius:50px;
+  font-family:'Jost',sans-serif;
+  font-size:.82rem;font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  backdrop-filter:blur(6px);
+}
+.btn-add-month:hover{
+  background:rgba(255,255,255,.22);
+  border-color:rgba(255,255,255,.45);
+  transform:translateY(-1px);
+}
+
+/* ─── MONTH TABS ─── */
+.tabs-bar{
+  position:relative;z-index:9;
+  background:var(--white);
+  border-bottom:1px solid var(--rose-lt);
+  padding:0 2.5rem;
+  display:flex;align-items:flex-end;gap:0;
+  overflow-x:auto;
+  box-shadow:var(--shadow-sm);
+}
+.tabs-bar::-webkit-scrollbar{height:3px;}
+.tabs-bar::-webkit-scrollbar-thumb{background:var(--rose-lt);border-radius:2px;}
+.month-tab{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.85rem 1.4rem .7rem;
+  font-size:.85rem;font-weight:500;
+  color:var(--plum-lt);
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+  white-space:nowrap;
+  transition:all .2s;
+  user-select:none;
+  position:relative;
+}
+.month-tab:hover{color:var(--rose);background:var(--blush);}
+.month-tab.active{
+  color:var(--rose);
+  border-bottom-color:var(--rose);
+  font-weight:600;
+  background:var(--blush);
+}
+.month-tab .tab-badge{
+  font-size:.68rem;
+  background:var(--rose-lt);
+  color:var(--plum);
+  padding:.1rem .4rem;
+  border-radius:50px;
+  font-weight:600;
+}
+.month-tab.active .tab-badge{background:var(--rose);color:var(--white);}
+.month-tab .del-tab{
+  font-size:.65rem;
+  background:rgba(214,63,110,.12);
+  color:var(--rose);
+  border:none;
+  border-radius:50%;
+  width:16px;height:16px;
+  cursor:pointer;
+  display:none;
+  align-items:center;justify-content:center;
+  margin-left:.2rem;
+  transition:all .15s;
+}
+.month-tab:hover .del-tab{display:flex;}
+.del-tab:hover{background:var(--rose)!important;color:var(--white)!important;}
+
+/* ─── MAIN CONTENT ─── */
+main{
+  position:relative;z-index:1;
+  max-width:1300px;
+  margin:0 auto;
+  padding:2rem 2rem 4rem;
+}
+
+/* ─── SUMMARY BAR ─── */
+.summary-bar{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:1rem;
+  margin-bottom:1.8rem;
+}
+.sum-card{
+  background:var(--white);
+  border-radius:var(--r);
+  padding:1.2rem 1.4rem;
+  box-shadow:var(--shadow-sm);
+  border-top:3px solid transparent;
+  animation:fadeUp .4s ease both;
+}
+.sum-card.rose{border-top-color:var(--rose);}
+.sum-card.gold{border-top-color:var(--gold);}
+.sum-card.mint{border-top-color:var(--mint);}
+.sum-card.plum{border-top-color:var(--plum);}
+.sum-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--plum-lt);margin-bottom:.3rem;}
+.sum-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:700;color:var(--plum);
+  line-height:1;
+}
+.sum-sub{font-size:.73rem;color:var(--plum-lt);margin-top:.25rem;}
+
+/* ─── PERIODO SECTIONS ─── */
+.periodo-section{margin-bottom:2rem;}
+.periodo-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1rem;
+  padding-bottom:.6rem;
+  border-bottom:2px solid var(--rose-lt);
+}
+.periodo-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:700;
+  color:var(--plum);
+  display:flex;align-items:center;gap:.5rem;
+}
+.periodo-total{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:700;color:var(--rose);
+}
+
+/* ─── SPLIT GRID ─── */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+@media(max-width:750px){.split{grid-template-columns:1fr;}}
+
+/* ─── PERSON TABLE ─── */
+.person-block{
+  background:var(--white);
+  border-radius:var(--r);
+  padding:1.2rem;
+  box-shadow:var(--shadow-sm);
+}
+.person-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:.9rem;
+}
+.person-name{
+  display:flex;align-items:center;gap:.5rem;
+  font-weight:600;font-size:.95rem;color:var(--plum);
+}
+.person-avatar{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;
+}
+.person-avatar.ros{background:var(--rose-lt);}
+.person-avatar.kath{background:var(--gold-lt);}
+.person-subtotal{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem;font-weight:700;color:var(--plum);
+}
+
+/* ─── EXPENSE TABLE ─── */
+.expense-table{width:100%;border-collapse:collapse;font-size:.83rem;}
+.expense-table th{
+  text-align:left;
+  padding:.4rem .5rem;
+  font-size:.68rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.06em;
+  color:var(--plum-lt);
+  border-bottom:1px solid var(--rose-lt);
+}
+.expense-table td{
+  padding:.42rem .5rem;
+  border-bottom:1px solid rgba(245,192,212,.2);
+  vertical-align:middle;
+}
+.expense-table tr:last-child td{border-bottom:none;}
+.expense-table tr:hover td{background:var(--blush);}
+
+/* Editable cells */
+.cell-edit{
+  background:transparent;border:none;outline:none;
+  font-family:'Jost',sans-serif;font-size:.83rem;color:var(--plum);
+  width:100%;
+  padding:.15rem .2rem;
+  border-radius:4px;
+  transition:background .15s;
+}
+.cell-edit:focus{background:var(--blush);outline:1px solid var(--rose-lt);}
+.cell-edit.monto{
+  text-align:right;font-weight:600;color:var(--rose);
+  width:70px;
+}
+.cell-edit.monto:focus{color:var(--plum);}
+
+/* Buttons */
+.btn-del-row{
+  background:none;border:none;cursor:pointer;
+  color:var(--rose-lt);font-size:.9rem;
+  transition:color .15s;padding:.1rem .2rem;
+  border-radius:4px;
+}
+.btn-del-row:hover{color:var(--rose);background:var(--blush);}
+.btn-add-row{
+  display:flex;align-items:center;gap:.35rem;
+  background:none;border:1.5px dashed var(--rose-lt);
+  color:var(--plum-lt);border-radius:8px;
+  padding:.4rem .8rem;font-size:.78rem;font-weight:500;
+  cursor:pointer;margin-top:.6rem;width:100%;justify-content:center;
+  transition:all .2s;font-family:'Jost',sans-serif;
+}
+.btn-add-row:hover{border-color:var(--rose);color:var(--rose);background:var(--blush);}
+
+/* ─── ADD MONTH MODAL ─── */
+.modal-bg{
+  position:fixed;inset:0;
+  background:rgba(61,16,39,.55);
+  backdrop-filter:blur(4px);
+  z-index:1000;
+  display:none;align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:var(--white);
+  border-radius:20px;
+  padding:2rem;
+  width:340px;
+  box-shadow:var(--shadow-lg);
+  animation:fadeUp .25s ease;
+}
+.modal h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;font-weight:700;
+  color:var(--plum);margin-bottom:1.2rem;
+}
+.modal select, .modal input{
+  width:100%;
+  border:1.5px solid var(--rose-lt);
+  border-radius:10px;
+  padding:.6rem .9rem;
+  font-family:'Jost',sans-serif;font-size:.9rem;
+  color:var(--plum);background:var(--blush);
+  outline:none;margin-bottom:.8rem;
+  transition:border-color .2s;
+}
+.modal select:focus, .modal input:focus{border-color:var(--rose);}
+.modal-btns{display:flex;gap:.6rem;justify-content:flex-end;margin-top:.5rem;}
+.btn-cancel{
+  background:none;border:1.5px solid var(--rose-lt);
+  color:var(--plum-lt);padding:.5rem 1.1rem;
+  border-radius:50px;font-family:'Jost',sans-serif;
+  font-size:.85rem;font-weight:500;cursor:pointer;
+  transition:all .2s;
+}
+.btn-cancel:hover{border-color:var(--plum-lt);color:var(--plum);}
+.btn-confirm{
+  background:var(--rose);border:none;color:var(--white);
+  padding:.5rem 1.3rem;border-radius:50px;
+  font-family:'Jost',sans-serif;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-confirm:hover{background:var(--plum);transform:translateY(-1px);}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.periodo-section{animation:fadeUp .35s ease both;}
+.periodo-section:nth-child(2){animation-delay:.08s;}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{
+  text-align:center;padding:3rem;color:var(--plum-lt);
+  font-size:.9rem;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-thumb{background:var(--rose-lt);border-radius:3px;}
+
+/* ─── SAVE INDICATOR ─── */
+.save-toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;
+  background:var(--mint);color:var(--white);
+  padding:.5rem 1rem;border-radius:50px;
+  font-size:.78rem;font-weight:600;
+  box-shadow:var(--shadow-md);
+  opacity:0;transform:translateY(8px);
+  transition:all .3s;z-index:999;
+  pointer-events:none;
+}
+.save-toast.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- SAVE TOAST -->
+<div class="save-toast" id="saveToast">✓ Guardado automáticamente</div>
+
+<!-- MODAL NUEVO MES -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>➕ Agregar Mes</h3>
+    <select id="modalMesSelect">
+      <option value="">Selecciona un mes</option>
+      <option value="ENERO">Enero</option><option value="FEBRERO">Febrero</option>
+      <option value="MARZO">Marzo</option><option value="ABRIL">Abril</option>
+      <option value="MAYO">Mayo</option><option value="JUNIO">Junio</option>
+      <option value="JULIO">Julio</option><option value="AGOSTO">Agosto</option>
+      <option value="SEPTIEMBRE">Septiembre</option><option value="OCTUBRE">Octubre</option>
+      <option value="NOVIEMBRE">Noviembre</option><option value="DICIEMBRE">Diciembre</option>
+    </select>
+    <select id="modalAnioSelect">
+      <option value="2026">2026</option><option value="2027">2027</option>
+      <option value="2028">2028</option>
+    </select>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="modalCancel">Cancelar</button>
+      <button class="btn-confirm" id="modalConfirm">Crear Mes</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <h1>🏠 Hogar <span>Rosalía & Katherine</span></h1>
+    <p>Control mensual de gastos compartidos · 2026</p>
+  </div>
+  <div class="header-right">
+    <button class="btn-add-month" id="btnAddMonth">+ Nuevo Mes</button>
+  </div>
+</header>
+
+<!-- TABS BAR -->
+<div class="tabs-bar" id="tabsBar"></div>
+
+<!-- MAIN -->
+<main id="mainContent"></main>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  DATA INICIAL (exacta del archivo subido)
+// ══════════════════════════════════════════════════════════
+const DEFAULT_DATA = {
+  "ENERO-2026": {
+    quincena: {
+      ROSALIA: [
+        {nombre:"Tarjeta Austro", monto:45},
+        {nombre:"Netflix", monto:15},
+        {nombre:"YouTube", monto:10},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Crédito Pichincha", monto:34},
+        {nombre:"Arriendo", monto:50},
+        {nombre:"Tarjeta Pichincha", monto:23},
+      ],
+      KATHERINE: [
+        {nombre:"Tarjeta GYE", monto:20},
+        {nombre:"Tarjeta Austro", monto:50},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Crédito Pichincha", monto:34},
+        {nombre:"Tarjeta Pichincha", monto:23},
+      ]
+    },
+    finmes: {
+      ROSALIA: [
+        {nombre:"Luz", monto:50},
+        {nombre:"Crédito Pichincha", monto:68},
+        {nombre:"Arriendo", monto:50},
+      ],
+      KATHERINE: [
+        {nombre:"Arriendo", monto:100},
+        {nombre:"Tarjeta Pacífico", monto:130},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Agua", monto:10},
+        {nombre:"De Prati", monto:25},
+      ]
+    }
+  },
+  "FEBRERO-2026": {
+    quincena: {
+      ROSALIA: [
+        {nombre:"Tarjeta Austro", monto:23.5},
+        {nombre:"Netflix", monto:15},
+        {nombre:"YouTube", monto:10},
+        {nombre:"PYCCA", monto:46.5},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Crédito Pichincha", monto:34},
+        {nombre:"Arriendo", monto:50},
+        {nombre:"Tarjeta Pichincha", monto:23},
+      ],
+      KATHERINE: [
+        {nombre:"Tarjeta GYE", monto:20},
+        {nombre:"Tarjeta Austro", monto:23.5},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"PYCCA", monto:46.5},
+        {nombre:"Crédito Pichincha", monto:34},
+        {nombre:"Tarjeta Pichincha", monto:23},
+      ]
+    },
+    finmes: {
+      ROSALIA: [
+        {nombre:"Luz", monto:50},
+        {nombre:"Crédito Pichincha", monto:68},
+        {nombre:"Arriendo", monto:50},
+      ],
+      KATHERINE: [
+        {nombre:"Arriendo", monto:100},
+        {nombre:"Tarjeta Pacífico", monto:130},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Agua", monto:10},
+        {nombre:"De Prati", monto:25},
+      ]
+    }
+  },
+  "MARZO-2026": {
+    quincena: {
+      ROSALIA: [
+        {nombre:"Tarjeta Austro", monto:23.5},
+        {nombre:"Netflix", monto:15},
+        {nombre:"YouTube", monto:10},
+        {nombre:"PYCCA", monto:46.5},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Crédito Pichincha", monto:34},
+        {nombre:"Arriendo", monto:50},
+        {nombre:"Tarjeta Pichincha", monto:23},
+      ],
+      KATHERINE: [
+        {nombre:"Tarjeta GYE", monto:20},
+        {nombre:"Tarjeta Austro", monto:23.5},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"PYCCA", monto:46.5},
+        {nombre:"Crédito Pichincha", monto:34},
+        {nombre:"Tarjeta Pichincha", monto:23},
+      ]
+    },
+    finmes: {
+      ROSALIA: [
+        {nombre:"Luz", monto:50},
+        {nombre:"Crédito Pichincha", monto:68},
+        {nombre:"Tarjeta Pacífico", monto:27.5},
+        {nombre:"Arriendo", monto:50},
+      ],
+      KATHERINE: [
+        {nombre:"Arriendo", monto:100},
+        {nombre:"Tarjeta Pacífico", monto:130},
+        {nombre:"Tarjeta Pacífico 2", monto:27.5},
+        {nombre:"Crédito GYE", monto:68},
+        {nombre:"Agua", monto:10},
+        {nombre:"De Prati", monto:25},
+      ]
+    }
+  }
+};
+
+// ══════════════════════════════════════════════════════════
+//  STORAGE
+// ══════════════════════════════════════════════════════════
+function loadData() {
+  try {
+    const raw = localStorage.getItem('hogar_data');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+
+let DB = loadData();
+let activeKey = Object.keys(DB)[0];
+
+function saveData() {
+  try { localStorage.setItem('hogar_data', JSON.stringify(DB)); } catch(e) {}
+  showToast();
+}
+
+function showToast() {
+  const t = document.getElementById('saveToast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ══════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════
+const fmt = v => '$' + Number(v||0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const uid = () => Math.random().toString(36).slice(2,8);
+
+function sumList(arr){ return arr.reduce((s,d)=>s+(+d.monto||0),0); }
+
+function monthLabel(key){
+  const [m, y] = key.split('-');
+  const names = {ENERO:'Enero',FEBRERO:'Febrero',MARZO:'Marzo',ABRIL:'Abril',
+    MAYO:'Mayo',JUNIO:'Junio',JULIO:'Julio',AGOSTO:'Agosto',
+    SEPTIEMBRE:'Sep',OCTUBRE:'Oct',NOVIEMBRE:'Nov',DICIEMBRE:'Dic'};
+  return (names[m]||m) + ' ' + y;
+}
+
+function monthTotal(key){
+  const d = DB[key];
+  if(!d) return 0;
+  return sumList(d.quincena.ROSALIA) + sumList(d.quincena.KATHERINE)
+       + sumList(d.finmes.ROSALIA)   + sumList(d.finmes.KATHERINE);
+}
+
+// ══════════════════════════════════════════════════════════
+//  RENDER TABS
+// ══════════════════════════════════════════════════════════
+function renderTabs(){
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML = '';
+  Object.keys(DB).forEach(key => {
+    const tab = document.createElement('div');
+    tab.className = 'month-tab' + (key === activeKey ? ' active' : '');
+    tab.dataset.key = key;
+    const total = monthTotal(key);
+    tab.innerHTML = `
+      <span>${monthLabel(key)}</span>
+      <span class="tab-badge">${fmt(total)}</span>
+      <button class="del-tab" title="Eliminar mes" data-key="${key}">✕</button>
+    `;
+    tab.addEventListener('click', e => {
+      if(e.target.closest('.del-tab')) return;
+      activeKey = key;
+      renderTabs();
+      renderContent();
+    });
+    tab.querySelector('.del-tab').addEventListener('click', e => {
+      e.stopPropagation();
+      if(Object.keys(DB).length <= 1){ alert('No puedes eliminar el único mes.'); return; }
+      if(!confirm('¿Eliminar ' + monthLabel(key) + '? Se perderán todos sus datos.')) return;
+      delete DB[key];
+      if(activeKey === key) activeKey = Object.keys(DB)[0];
+      saveData();
+      renderTabs();
+      renderContent();
+    });
+    bar.appendChild(tab);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  RENDER CONTENT
+// ══════════════════════════════════════════════════════════
+function renderContent(){
+  const main = document.getElementById('mainContent');
+  const d = DB[activeKey];
+  if(!d){ main.innerHTML='<div class="empty-state">Sin datos para este mes.</div>'; return; }
+
+  const rosQ  = sumList(d.quincena.ROSALIA);
+  const kathQ = sumList(d.quincena.KATHERINE);
+  const rosFM = sumList(d.finmes.ROSALIA);
+  const kathFM= sumList(d.finmes.KATHERINE);
+  const totalRos  = rosQ + rosFM;
+  const totalKath = kathQ + kathFM;
+  const totalMes  = totalRos + totalKath;
+
+  main.innerHTML = `
+    <!-- SUMMARY -->
+    <div class="summary-bar">
+      <div class="sum-card rose">
+        <div class="sum-label">💸 Total del Mes</div>
+        <div class="sum-val" id="sumTotal">${fmt(totalMes)}</div>
+        <div class="sum-sub">Hogar completo</div>
+      </div>
+      <div class="sum-card plum">
+        <div class="sum-label">🌸 Rosalía</div>
+        <div class="sum-val" id="sumRos">${fmt(totalRos)}</div>
+        <div class="sum-sub">Q: ${fmt(rosQ)} · FM: ${fmt(rosFM)}</div>
+      </div>
+      <div class="sum-card gold">
+        <div class="sum-label">✨ Katherine</div>
+        <div class="sum-val" id="sumKath">${fmt(totalKath)}</div>
+        <div class="sum-sub">Q: ${fmt(kathQ)} · FM: ${fmt(kathFM)}</div>
+      </div>
+      <div class="sum-card mint">
+        <div class="sum-label">⚖️ Diferencia</div>
+        <div class="sum-val" id="sumDif" style="color:${Math.abs(totalRos-totalKath)<1?'var(--mint)':(totalRos>totalKath?'var(--rose)':'var(--gold)')}">${fmt(Math.abs(totalRos-totalKath))}</div>
+        <div class="sum-sub" id="sumDifSub">${totalRos>totalKath?'Rosalía paga más':totalKath>totalRos?'Katherine paga más':'¡Equilibradas! 🎉'}</div>
+      </div>
+    </div>
+
+    <!-- QUINCENA -->
+    <div class="periodo-section">
+      <div class="periodo-header">
+        <div class="periodo-title">🗓️ Quincena</div>
+        <div class="periodo-total" id="ptQtotal">${fmt(rosQ+kathQ)}</div>
+      </div>
+      <div class="split">
+        ${personBlock('quincena','ROSALIA','ros','🌸')}
+        ${personBlock('quincena','KATHERINE','kath','✨')}
+      </div>
+    </div>
+
+    <!-- FIN DE MES -->
+    <div class="periodo-section">
+      <div class="periodo-header">
+        <div class="periodo-title">📅 Fin de Mes</div>
+        <div class="periodo-total" id="ptFMtotal">${fmt(rosFM+kathFM)}</div>
+      </div>
+      <div class="split">
+        ${personBlock('finmes','ROSALIA','ros','🌸')}
+        ${personBlock('finmes','KATHERINE','kath','✨')}
+      </div>
+    </div>
+  `;
+
+  bindTableEvents();
+}
+
+function personBlock(periodo, persona, cls, emoji){
+  const items = DB[activeKey][periodo][persona];
+  const total = sumList(items);
+  const rows = items.map((item,i) => `
+    <tr data-periodo="${periodo}" data-persona="${persona}" data-idx="${i}">
+      <td><input class="cell-edit nombre-edit" value="${escHtml(item.nombre)}" placeholder="Descripción"></td>
+      <td style="text-align:right"><input class="cell-edit monto monto-edit" value="${item.monto}" type="number" step="0.01" min="0"></td>
+      <td style="width:28px"><button class="btn-del-row" title="Eliminar">✕</button></td>
+    </tr>`).join('');
+
+  return `
+    <div class="person-block">
+      <div class="person-header">
+        <div class="person-name">
+          <div class="person-avatar ${cls}">${emoji}</div>
+          ${persona==='ROSALIA'?'Rosalía':'Katherine'}
+        </div>
+        <div class="person-subtotal" id="sub-${periodo}-${persona}">${fmt(total)}</div>
+      </div>
+      <table class="expense-table">
+        <thead><tr>
+          <th>Deuda / Gasto</th>
+          <th style="text-align:right">Monto</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="tbody-${periodo}-${persona}">${rows}</tbody>
+      </table>
+      <button class="btn-add-row" data-periodo="${periodo}" data-persona="${persona}">+ Agregar fila</button>
+    </div>`;
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ══════════════════════════════════════════════════════════
+//  TABLE EVENTS
+// ══════════════════════════════════════════════════════════
+function bindTableEvents(){
+  const main = document.getElementById('mainContent');
+
+  // ── Edit nombre ──
+  main.querySelectorAll('.nombre-edit').forEach(input => {
+    input.addEventListener('change', e => {
+      const {periodo, persona, idx} = e.target.closest('tr').dataset;
+      DB[activeKey][periodo][persona][+idx].nombre = e.target.value;
+      saveData();
+      updateTotals();
+      renderTabs();
+    });
+  });
+
+  // ── Edit monto ──
+  main.querySelectorAll('.monto-edit').forEach(input => {
+    input.addEventListener('change', e => {
+      const {periodo, persona, idx} = e.target.closest('tr').dataset;
+      DB[activeKey][periodo][persona][+idx].monto = parseFloat(e.target.value)||0;
+      saveData();
+      updateTotals();
+      renderTabs();
+    });
+  });
+
+  // ── Delete row ──
+  main.querySelectorAll('.btn-del-row').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const tr = e.target.closest('tr');
+      const {periodo, persona, idx} = tr.dataset;
+      DB[activeKey][periodo][persona].splice(+idx, 1);
+      saveData();
+      renderContent(); // re-render to fix indices
+      renderTabs();
+    });
+  });
+
+  // ── Add row ──
+  main.querySelectorAll('.btn-add-row').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const {periodo, persona} = e.target.dataset;
+      DB[activeKey][periodo][persona].push({nombre:'Nueva deuda', monto:0});
+      saveData();
+      renderContent();
+      renderTabs();
+      // Focus last row nombre
+      setTimeout(() => {
+        const tbody = document.getElementById(`tbody-${periodo}-${persona}`);
+        if(tbody){
+          const lastInput = tbody.querySelector('tr:last-child .nombre-edit');
+          if(lastInput){ lastInput.focus(); lastInput.select(); }
+        }
+      }, 50);
+    });
+  });
+}
+
+// ── Live update totals without full re-render ──
+function updateTotals(){
+  const d = DB[activeKey];
+  const rosQ  = sumList(d.quincena.ROSALIA);
+  const kathQ = sumList(d.quincena.KATHERINE);
+  const rosFM = sumList(d.finmes.ROSALIA);
+  const kathFM= sumList(d.finmes.KATHERINE);
+  const totalRos  = rosQ + rosFM;
+  const totalKath = kathQ + kathFM;
+  const totalMes  = totalRos + totalKath;
+
+  const el = id => document.getElementById(id);
+  if(el('sumTotal')) el('sumTotal').textContent = fmt(totalMes);
+  if(el('sumRos'))   el('sumRos').textContent   = fmt(totalRos);
+  if(el('sumKath'))  el('sumKath').textContent  = fmt(totalKath);
+  if(el('ptQtotal')) el('ptQtotal').textContent = fmt(rosQ+kathQ);
+  if(el('ptFMtotal'))el('ptFMtotal').textContent= fmt(rosFM+kathFM);
+
+  const dif = Math.abs(totalRos-totalKath);
+  if(el('sumDif')){
+    el('sumDif').textContent = fmt(dif);
+    el('sumDif').style.color = dif<1?'var(--mint)':(totalRos>totalKath?'var(--rose)':'var(--gold)');
+  }
+  if(el('sumDifSub'))
+    el('sumDifSub').textContent = dif<1?'¡Equilibradas! 🎉':(totalRos>totalKath?'Rosalía paga más':'Katherine paga más');
+
+  ['quincena','finmes'].forEach(p => {
+    ['ROSALIA','KATHERINE'].forEach(per => {
+      const s = document.getElementById(`sub-${p}-${per}`);
+      if(s) s.textContent = fmt(sumList(d[p][per]));
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ADD MONTH MODAL
+// ══════════════════════════════════════════════════════════
+document.getElementById('btnAddMonth').addEventListener('click', () => {
+  document.getElementById('modalBg').classList.add('open');
+});
+document.getElementById('modalCancel').addEventListener('click', () => {
+  document.getElementById('modalBg').classList.remove('open');
+});
+document.getElementById('modalBg').addEventListener('click', e => {
+  if(e.target === document.getElementById('modalBg'))
+    document.getElementById('modalBg').classList.remove('open');
+});
+document.getElementById('modalConfirm').addEventListener('click', () => {
+  const mes = document.getElementById('modalMesSelect').value;
+  const anio = document.getElementById('modalAnioSelect').value;
+  if(!mes){ alert('Selecciona un mes.'); return; }
+  const key = mes + '-' + anio;
+  if(DB[key]){ alert('Ese mes ya existe.'); return; }
+  DB[key] = {
+    quincena:{ ROSALIA:[], KATHERINE:[] },
+    finmes:  { ROSALIA:[], KATHERINE:[] }
+  };
+  activeKey = key;
+  saveData();
+  document.getElementById('modalBg').classList.remove('open');
+  document.getElementById('modalMesSelect').value = '';
+  renderTabs();
+  renderContent();
+});
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+renderTabs();
+renderContent();
+</script>
+</body>
+</html>
